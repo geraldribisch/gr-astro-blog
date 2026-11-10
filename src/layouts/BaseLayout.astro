@@ -1,0 +1,57 @@
+---
+import '../styles/global.css';
+import Navigation from '../components/Navigation.astro';
+
+interface Props {
+	title: string;
+	description: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="de">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<meta name="description" content={description} />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+	</head>
+	<body>
+		<Navigation />
+		<main>
+			<slot />
+		</main>
+		<footer class="site-footer">
+			<p>© 2026 Gerald Ribisch | Wien, Österreich</p>
+		</footer>
+	</body>
+</html>
+
+<style>
+	body {
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+	}
+
+	main {
+		flex: 1;
+		width: 100%;
+		max-width: 900px;
+		margin: 0 auto;
+		padding: 2rem 1.5rem;
+	}
+
+	.site-footer {
+		padding: 1.5rem;
+		text-align: center;
+		font-size: 0.9rem;
+		color: #666;
+		border-top: 1px solid #e5e5e5;
+	}
+</style>
