@@ -1,7 +1,105 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PostCard from '../components/PostCard.astro';
+
+const latestPosts = (await getCollection('blog', ({ data }) => !data.draft))
+	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+	.slice(0, 2);
 ---
 
-<BaseLayout title="Gerald Ribisch" description="Persönliche Website und Blog von Gerald Ribisch aus Wien.">
-	<h1>Willkommen</h1>
+<BaseLayout
+	title="Willkommen"
+	description="Persönliche Website und Blog von Gerald Ribisch aus Wien."
+>
+	<section class="hero">
+		<h1>Willkommen auf dieser Website</h1>
+		<p class="subtitle">Hier schreibe ich über Themen, die mich bewegen.</p>
+		<a href="/blog" class="button">Zum Blog →</a>
+	</section>
+
+	<section class="section">
+		<h2>Über diese Seite</h2>
+		<p>
+			Diese Website ist ein persönlicher Ort für Gedanken, Erfahrungen und Notizen. In
+			unregelmäßigen Abständen erscheinen hier neue Beiträge zu unterschiedlichen Themen. Schön,
+			dass du vorbeischaust.
+		</p>
+	</section>
+
+	<section class="section">
+		<h2>Neueste Beiträge</h2>
+		{
+			latestPosts.length === 0 ? (
+				<p>Noch keine Beiträge vorhanden.</p>
+			) : (
+				<ul class="post-grid">
+					{latestPosts.map((post) => (
+						<li>
+							<PostCard post={post} headingLevel={3} />
+						</li>
+					))}
+				</ul>
+			)
+		}
+	</section>
 </BaseLayout>
+
+<style>
+	.hero {
+		padding: 4rem 1.5rem;
+		text-align: center;
+		background: #eaf2fb;
+		border-radius: 12px;
+	}
+
+	.hero h1 {
+		font-size: clamp(1.8rem, 5vw, 2.75rem);
+		line-height: 1.2;
+		color: #1a2b40;
+	}
+
+	.subtitle {
+		margin-top: 1rem;
+		font-size: 1.2rem;
+		color: #4a5a6a;
+	}
+
+	.button {
+		display: inline-block;
+		margin-top: 2rem;
+		padding: 0.75rem 1.75rem;
+		font-weight: 600;
+		color: #fff;
+		background: #0057b8;
+		border-radius: 6px;
+		text-decoration: none;
+		transition: background 0.2s;
+	}
+
+	.button:hover,
+	.button:focus-visible {
+		background: #00438f;
+	}
+
+	.button:focus-visible {
+		outline: 2px solid #0057b8;
+		outline-offset: 3px;
+	}
+
+	.section {
+		margin-top: 3rem;
+	}
+
+	.section h2 {
+		margin-bottom: 1rem;
+		font-size: 1.6rem;
+	}
+
+	.post-grid {
+		list-style: none;
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+		gap: 1.25rem;
+	}
+</style>
