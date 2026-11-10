@@ -1,0 +1,12 @@
+# Abhängigkeiten
+node_modules/
+
+# Build-Ausgabe
+dist/
+.astro/
+
+# Umgebungsvariablen
+.env
+
+# claude-blog-Artefakte (HTML, PDF, Screenshots, Reports)
+drafts/
