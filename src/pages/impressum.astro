@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Impressum" description="Impressum und Offenlegung nach § 25 Mediengesetz.">
+	<article class="legal">
+		<h1>Impressum</h1>
+		<p class="intro">Offenlegung nach § 25 Mediengesetz</p>
+
+		<section>
+			<h2>Medieninhaber</h2>
+			<p>[VORNAME NACHNAME]</p>
+		</section>
+
+		<section>
+			<h2>Adresse</h2>
+			<address>
+				[STRASSE HAUSNUMMER]<br />
+				[PLZ] [ORT], Österreich
+			</address>
+		</section>
+
+		<section>
+			<h2>Kontakt</h2>
+			<p>E-Mail: [IHRE-EMAIL@DOMAIN.AT]</p>
+		</section>
+
+		<section>
+			<h2>Grundlegende Richtung</h2>
+			<p>Privatblog mit persönlichen Beiträgen.</p>
+		</section>
+
+		<section>
+			<h2>Urheberrecht</h2>
+			<p>
+				Alle Texte, Bilder und sonstigen Inhalte dieser Website sind urheberrechtlich geschützt,
+				sofern nicht anders angegeben. Eine Vervielfältigung, Bearbeitung oder Verbreitung außerhalb
+				der Grenzen des Urheberrechtsgesetzes ist nur mit vorheriger schriftlicher Zustimmung
+				erlaubt.
+			</p>
+		</section>
+
+		<section>
+			<h2>Haftungsausschluss</h2>
+			<p>
+				Die Inhalte dieser Website wurden mit Sorgfalt erstellt. Sie geben die persönliche Meinung
+				des Medieninhabers wieder und ersetzen keine fachliche Beratung. Für Inhalte verlinkter
+				externer Websites sind ausschließlich deren Betreiber verantwortlich.
+			</p>
+			<p>Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte wird keine Gewähr übernommen.</p>
+		</section>
+	</article>
+</BaseLayout>
+
+<style>
+	.legal h1 {
+		margin-bottom: 0.25rem;
+	}
+
+	.intro {
+		color: #666;
+	}
+
+	.legal section {
+		margin-top: 2rem;
+	}
+
+	.legal h2 {
+		margin-bottom: 0.5rem;
+		font-size: 1.25rem;
+	}
+
+	.legal p + p {
+		margin-top: 0.75rem;
+	}
+
+	address {
+		font-style: normal;
+	}
+</style>
