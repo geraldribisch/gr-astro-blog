@@ -10,3 +10,16 @@ dist/
 
 # claude-blog-Artefakte (HTML, PDF, Screenshots, Reports)
 drafts/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Weitere Umgebungsvariablen
+.env.production
+
+# System- und Editor-Dateien
+.DS_Store
+.idea/
