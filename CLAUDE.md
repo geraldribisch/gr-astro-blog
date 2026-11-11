@@ -2,7 +2,7 @@
 
 ## Projekt
 
-- Astro.js-Projekt (Astro 6, Node.js 22), statische Website
+- Astro.js-Projekt (Astro 7, Node.js 22), statische Website
 - Österreichischer Kontext (Wien), Sprache Deutsch
 - Ziel: Homepage, Blog, Impressum, Datenschutz
 - Stack: plain CSS, Scoped Styles in `.astro`-Dateien, keine CSS-Bibliothek
