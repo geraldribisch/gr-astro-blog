@@ -4,6 +4,7 @@ node_modules/
 # Build-Ausgabe
 dist/
 .astro/
+.wrangler/
 
 # Umgebungsvariablen
 .env
