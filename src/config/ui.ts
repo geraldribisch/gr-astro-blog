@@ -22,7 +22,7 @@ export const ui = {
     featured: "Empfohlen",
     /** "5 Min. Lesezeit" */
     readingTime: (minutes: number) => `${minutes} Min. Lesezeit`,
-    /** Zwischen "Neu" und dem Datum auf der großen Karte der Startseite. */
+    /** Zwischen Label und Datum auf der großen Karte (variant "lead"). */
     dateLabelSeparator: " — ",
   },
 
@@ -79,12 +79,11 @@ export const ui = {
   },
 
   home: {
-    latestLabel: "Neuester Beitrag",
-    latestBadge: "Neu",
-    morePosts: "Weitere Beiträge",
-    noMorePosts: "Weitere Beiträge folgen bald.",
-    toArchive: "Zum Archiv",
-    about: "Über diesen Blog",
+    socialNav: "Profile und Kontakt",
+    portraitAlt: (name: string) => `Porträt von ${name}`,
+    latest: "Neueste Beiträge",
+    noPosts: "Bald erscheinen hier die ersten Beiträge.",
+    allPosts: "Alle Beiträge",
   },
 
   post: {
@@ -149,11 +148,13 @@ export const ui = {
     toArchive: "Zum Archiv",
   },
 
+  /** Footer und Visitenkarte der Startseite teilen sich `socialLabel`. */
   footer: {
     copyright: (year: number) => `© ${year} Alle Rechte vorbehalten.`,
     nav: "Fußzeilen-Navigation",
-    rssLabel: "RSS-Feed",
-    socialLabel: (name: string, network: string) => `${name} auf ${network}`,
+    /** "Gerald Ribisch auf GitHub", "E-Mail an Gerald Ribisch" */
+    socialLabel: (name: string, network: string) =>
+      network === "E-Mail" ? `E-Mail an ${name}` : `${name} auf ${network}`,
     builtWith: "Erstellt mit",
   },
 } as const;

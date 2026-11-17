@@ -1,11 +1,10 @@
 /**
  * The site's categories. Every post belongs to exactly one of these, so keep the
- * list short — six is the practical ceiling before the sidebar stops reading as
- * a menu. Rename or replace entries here, then update the `category` value in
+ * list short — six is the practical ceiling before the categories page stops
+ * reading as a menu. Rename or replace entries here, then update the `category` value in
  * each post's frontmatter to match; the build fails on any mismatch.
  *
- * Order matters: it is the order used on the categories index and in the home
- * sidebar.
+ * Order matters: it is the order used on the categories index.
  */
 export const categories = ["Allgemein"] as const;
 

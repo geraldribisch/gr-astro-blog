@@ -202,21 +202,26 @@
     }
   }
 
-  /* Home sidebar: sticky beside the feed on wide screens, stacked below it on
-     narrow ones. */
-  .sidebar {
-    display: grid;
-    gap: 4rem;
-    align-content: start;
+  /* Round icon link for profiles (home card and footer). */
+  .social-btn {
+    display: inline-grid;
+    width: 2.25rem;
+    height: 2.25rem;
+    place-items: center;
+    border: 1px solid var(--border);
+    color: var(--muted-foreground);
+    border-radius: var(--radius-full);
+    transition:
+      border-color var(--duration) var(--ease-out),
+      color var(--duration) var(--ease-out),
+      transform var(--duration) var(--ease-out);
   }
 
-  @media (min-width: 1024px) {
-    .sidebar {
-      position: sticky;
-      top: 4.5rem;
-      padding-left: 2.5rem;
-      border-left: 1px solid var(--border);
-    }
+  .social-btn:hover,
+  .social-btn:focus-visible {
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+    color: var(--accent);
+    transform: translateY(-2px);
   }
 
   /* Archive and topic page headers. */

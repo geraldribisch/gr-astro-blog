@@ -29,7 +29,7 @@ const posts = defineCollection({
           creditUrl: z.url().optional(),
         })
         .optional(),
-      /** Surfaces the post in the "Featured" list in the home sidebar. */
+      /** The newest featured post is shown under "Empfohlen" on the home page. */
       featured: z.boolean().default(false),
       draft: z.boolean().default(false),
     }),
