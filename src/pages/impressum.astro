@@ -1,0 +1,53 @@
+---
+import { getCollection } from "astro:content";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { visiblePosts } from "@/lib/posts";
+
+const allPosts = visiblePosts(await getCollection("posts"));
+---
+
+<BaseLayout title="Impressum" description="Impressum und Offenlegung nach § 25 Mediengesetz.">
+  <SiteHeader posts={allPosts} />
+  <main id="content" class="outer">
+    <article class="canvas">
+      <header class="pagehead">
+        <p class="eyebrow">Rechtliches</p>
+        <h1 class="pagehead-title">Impressum</h1>
+        <p class="pagehead-description">Offenlegung nach § 25 Mediengesetz</p>
+      </header>
+
+      <div class="prose">
+        <h2>Medieninhaber</h2>
+        <p>Gerald Ribisch</p>
+
+        <h2>Adresse</h2>
+        <address class="not-italic">Wien, Österreich</address>
+
+        <h2>Kontakt</h2>
+        <p>E-Mail: hi@geraldribisch.com</p>
+
+        <h2>Grundlegende Richtung</h2>
+        <p>Privatblog mit persönlichen Beiträgen.</p>
+
+        <h2>Urheberrecht</h2>
+        <p>
+          Alle Texte, Bilder und sonstigen Inhalte dieser Website sind urheberrechtlich geschützt,
+          sofern nicht anders angegeben. Eine Vervielfältigung, Bearbeitung oder Verbreitung außerhalb
+          der Grenzen des Urheberrechtsgesetzes ist nur mit vorheriger schriftlicher Zustimmung
+          erlaubt.
+        </p>
+
+        <h2>Haftungsausschluss</h2>
+        <p>
+          Die Inhalte dieser Website wurden mit Sorgfalt erstellt. Sie geben die persönliche Meinung
+          des Medieninhabers wieder und ersetzen keine fachliche Beratung. Für Inhalte verlinkter
+          externer Websites sind ausschließlich deren Betreiber verantwortlich.
+        </p>
+        <p>Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte wird keine Gewähr übernommen.</p>
+      </div>
+    </article>
+  </main>
+  <SiteFooter />
+</BaseLayout>

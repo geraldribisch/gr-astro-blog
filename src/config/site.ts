@@ -24,4 +24,8 @@ export const navigation = [
 ];
 
 /** Secondary navigation rendered in the footer. */
-export const footerNavigation = [{ label: "RSS", href: "/rss.xml" }];
+export const footerNavigation = [
+  { label: "Impressum", href: "/impressum/" },
+  { label: "Datenschutz", href: "/datenschutz/" },
+  { label: "RSS", href: "/rss.xml" },
+];
