@@ -5,8 +5,7 @@ Use this guide when adapting Monograph for a real blog.
 ## Site Settings
 
 Edit [src/config/site.ts](./src/config/site.ts) first. It holds the wordmark, default metadata,
-canonical domain, language and date locale, the sidebar about blurb, social links, and the
-newsletter and contact form settings.
+canonical domain, language and date locale, the sidebar about blurb and social links.
 
 Set `siteConfig.siteUrl` before building for production. Canonical URLs, social image URLs, RSS,
 `robots.txt`, the sitemap, and JSON-LD all derive from it.
@@ -24,12 +23,9 @@ Two arrays in the same config file drive every menu:
 export const navigation = [
   { label: "Archive", href: "/posts/" },
   { label: "Categories", href: "/categories/" },
-  { label: "About", href: "/about/" },
 ];
 
 export const footerNavigation = [
-  { label: "Contact", href: "/contact/" },
-  { label: "Privacy", href: "/privacy/" },
   { label: "RSS", href: "/rss.xml" },
 ];
 ```
@@ -65,16 +61,14 @@ From there the theme handles the rest:
 - `/categories/` lists every category with its description and post count, in configured order.
 - `/category/<slug>/` is generated for each category that has at least one post.
 - The home sidebar lists the same categories with counts.
-- The post byline reads "By Author in Category", linking to both.
+- The post byline reads "By Author in Category"; only the category is a link.
 
 Slugs are derived from the name (`"Design Systems"` becomes `design-systems`).
 
 ## Authors
 
-Authors come from post frontmatter — there is no separate author file. Each post carries a `name` and
-a short `role`, and the theme groups posts by name to build `/author/` and `/author/<name>/`. Keep the
-`role` string identical across a given author's posts, since the listing uses the value it last saw.
-The demo content ships with three authors.
+Authors come from post frontmatter — there is no separate author file and no author page. The
+name appears as plain text in the post byline.
 
 ## Featured Posts
 
@@ -97,29 +91,6 @@ source files reasonably sized.
 Read time is computed from the post body at 220 words per minute in
 [src/lib/posts.ts](./src/lib/posts.ts) — there is no frontmatter field. Change `readingMinutes` there
 if your readers move at a different pace.
-
-## Newsletter and Contact Forms
-
-Both forms are provider-neutral and share the same three states:
-
-| `enabled` | `action`               | Behavior                                                                                   |
-| --------- | ---------------------- | ------------------------------------------------------------------------------------------ |
-| `true`    | endpoint URL           | Submits to your provider                                                                   |
-| `true`    | `""` (shipped default) | Fully interactive demo; a script confirms the submit, clears the fields, and sends nothing |
-| `false`   | anything               | Every control is disabled with an explanatory note                                         |
-
-Configure them in `siteConfig.newsletter` and `siteConfig.contact`:
-
-```ts
-newsletter: {
-  enabled: true,
-  action: "https://example.com/newsletter",
-  method: "post",
-  emailFieldName: "email",
-  title: "Get new posts by email",
-  description: "One email when something new goes up. No spam, unsubscribe anytime.",
-}
-```
 
 ## Search
 
@@ -180,11 +151,11 @@ The reusable hover classes are:
 
 | Class                                             | Effect                                                              | Used by                                                          |
 | ------------------------------------------------- | ------------------------------------------------------------------- | ---------------------------------------------------------------- |
-| `.link-title` + `.link-title__text`               | The heading picks up the accent while the excerpt and meta stay put | Feed entries, sidebar rows, category and author lists, prev/next |
+| `.link-title` + `.link-title__text`               | The heading picks up the accent while the excerpt and meta stay put | Feed entries, sidebar rows, category lists, prev/next |
 | `.link-sweep`                                     | Underline wipes in from the left                                    | Post byline links                                                |
 | `.nav-link`                                       | Hairline wipes in underneath; stays for the current page            | Header and footer navigation, pagination                         |
 | `.link-nudge` + `.link-nudge__arrow`              | Arrow leans toward its destination                                  | Pagination, prev/next                                            |
-| `.icon-btn`, `.pill`, `.share-btn`, `.social-btn` | Accent tint, and a 2px lift on the round buttons                    | Header controls, category pills, share and social rows           |
+| `.icon-btn`, `.pill`, `.social-btn`               | Accent tint, and a 2px lift on the round buttons                    | Header controls, category pills, social row                      |
 
 Nothing fades out on hover — a hovered item gains emphasis rather than the page losing it. All of it
 collapses to near-instant under `prefers-reduced-motion: reduce`.
@@ -274,17 +245,11 @@ license file if you keep the font.
 
 ## Icons
 
-Social and share icons are local SVGs in [src/icons/bootstrap](./src/icons/bootstrap), rendered
+Social icons are local SVGs in [src/icons/bootstrap](./src/icons/bootstrap), rendered
 through [src/components/LocalIcon.astro](./src/components/LocalIcon.astro). To add a network, drop
 its SVG in that folder, register it in `LocalIcon.astro`, and map the label in
 `socialIconByLabel` in [src/components/SiteFooter.astro](./src/components/SiteFooter.astro). The
 bundled icons come from Bootstrap Icons and keep their MIT license notice in the icon folder.
-
-## Pages
-
-Starter pages live in [src/pages](./src/pages): `about.astro`, `contact.astro`, and `privacy.astro`.
-Replace their copy before going live — the privacy text in particular is a starting point, not legal
-advice. They use `.prose` inside `.canvas`, so new pages can copy either as a template.
 
 ## Demo Content
 
