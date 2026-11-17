@@ -5,14 +5,6 @@ import { siteConfig } from "@/config/site";
 export type Post = CollectionEntry<"posts">;
 export { categories, categorySlug, type Category };
 
-export const authorSlug = (author: string) =>
-  author
-    .toLowerCase()
-    .replace(/&/g, "and")
-    .replace(/[^a-z0-9\s-]/g, "")
-    .trim()
-    .replace(/\s+/g, "-");
-
 export const categoryHref = (category: string) => `/category/${categorySlug(category)}/`;
 
 export const postSlug = (post: Post) => post.id.replace(/\/index$/, "");
@@ -77,24 +69,6 @@ export const getAdjacent = (posts: Post[], current: Post) => {
     older: index >= 0 && index < ordered.length - 1 ? ordered[index + 1] : undefined,
   };
 };
-
-export const getAllAuthors = (posts: Post[]) =>
-  Array.from(
-    visiblePosts(posts)
-      .reduce((authors, post) => {
-        const slug = authorSlug(post.data.author.name);
-        const current = authors.get(slug);
-        authors.set(slug, {
-          name: post.data.author.name,
-          role: post.data.author.role,
-          posts: [...(current?.posts ?? []), post],
-        });
-        return authors;
-      }, new Map<string, { name: string; role: string; posts: Post[] }>())
-      .entries(),
-  )
-    .map(([slug, author]) => ({ slug, ...author }))
-    .sort((a, b) => b.posts.length - a.posts.length || a.name.localeCompare(b.name));
 
 export const formatDate = (date: Date, style: "short" | "long" = "short") =>
   new Intl.DateTimeFormat(siteConfig.dateLocale, {
