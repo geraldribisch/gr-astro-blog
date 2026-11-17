@@ -5,8 +5,15 @@
 - Astro.js-Projekt (Astro 7, Node.js 22), statische Website
 - Österreichischer Kontext (Wien), Sprache Deutsch
 - Ziel: Homepage, Blog, Impressum, Datenschutz
-- Stack: plain CSS, Scoped Styles in `.astro`-Dateien, keine CSS-Bibliothek
-- Blogposts liegen als Markdown in `src/content/blog/` (Content Collection)
+- Stack: Astro 7, Node.js ab 22.12, Tailwind CSS 4 über das Theme Monograph. Design-Tokens des Themes verwenden, keine festen Farb- oder Abstandswerte.
+- Posts liegen als Ordner unter `src/content/posts/<slug>/index.md`. Pflichtfelder laut `src/content.config.ts`.
+- Autor immer "Gerald Ribisch".
+- Die Kategorie muss in `src/config/categories.ts` stehen. Eine neue Kategorie nur nach Rückfrage anlegen.
+- Titelbild als `cover.jpg` im Ordner des Posts, mit Alt-Text und Quellenangabe in `creditName` und `creditUrl`.
+- Seiteneinstellungen, Navigation, Kategorien und Social Links liegen in `src/config/`.
+- Die Website bleibt statisch. Keinen Server-Adapter installieren, `wrangler.jsonc` nur auf ausdrückliche Anweisung ändern.
+- Alle Texte der Oberfläche auf Deutsch, Datumsformat für Österreich (`de-AT`).
+- Hinweise des Theme-Autors: @AGENTS.md. Bei Widersprüchen gilt diese CLAUDE.md.
 
 ## Befehle
 
@@ -40,6 +47,6 @@
 
 ## claude-blog
 
-- Nur committen: das Markdown des Posts, im Post verwendete Bilder (unter `src/assets/blog/`) sowie `BRAND.md` und `VOICE.md`.
+- Nur committen: das Markdown des Posts, im Post verwendete Bilder (im Ordner des Posts) sowie `BRAND.md` und `VOICE.md`.
 - Alles andere (HTML, PDF, Screenshots, Reports) nach `drafts/` legen, nicht committen.
 - Prüfberichte als Kommentar in den Pull Request posten, nicht ins Repo.

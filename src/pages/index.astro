@@ -1,105 +1,91 @@
 ---
-import { getCollection } from 'astro:content';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import PostCard from '../components/PostCard.astro';
+import { getCollection } from "astro:content";
+import NewsletterSignup from "@/components/NewsletterSignup.astro";
+import PostCard from "@/components/PostCard.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
+import SiteHeader from "@/components/SiteHeader.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { siteConfig } from "@/config/site";
+import { categoryHref, getCategoryList, getFeatured, visiblePosts } from "@/lib/posts";
 
-const latestPosts = (await getCollection('blog', ({ data }) => !data.draft))
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-	.slice(0, 2);
+const allPosts = visiblePosts(await getCollection("posts"));
+const [latest, ...rest] = allPosts;
+const feed = rest.slice(0, 8);
+const featured = getFeatured(allPosts, 4).filter((post) => post.id !== latest?.id);
+const categoryList = getCategoryList(allPosts);
+const hasMore = rest.length > feed.length;
 ---
 
-<BaseLayout
-	title="Willkommen"
-	description="Persönliche Website und Blog von Gerald Ribisch aus Wien."
->
-	<section class="hero">
-		<h1>Willkommen auf dieser Website</h1>
-		<p class="subtitle">Hier schreibe ich über Themen, die mich bewegen.</p>
-		<a href="/blog" class="button">Zum Blog →</a>
-	</section>
+<BaseLayout>
+  <SiteHeader posts={allPosts} />
+  <main id="content" class="outer">
+    <div class="inner">
+      <h1 class="sr-only">{siteConfig.name} — {siteConfig.tagline}</h1>
 
-	<section class="section">
-		<h2>Über diese Seite</h2>
-		<p>
-			Diese Website ist ein persönlicher Ort für Gedanken, Erfahrungen und Notizen. In
-			unregelmäßigen Abständen erscheinen hier neue Beiträge zu unterschiedlichen Themen. Schön,
-			dass du vorbeischaust.
-		</p>
-	</section>
+      {latest && (
+        <section class="pt-10 pb-[var(--space-section)] md:pt-14" aria-label="Neuester Beitrag">
+          <PostCard post={latest} variant="lead" headingLevel="h2" dateLabel="Neu" />
+        </section>
+      )}
 
-	<section class="section">
-		<h2>Neueste Beiträge</h2>
-		{
-			latestPosts.length === 0 ? (
-				<p>Noch keine Beiträge vorhanden.</p>
-			) : (
-				<ul class="post-grid">
-					{latestPosts.map((post) => (
-						<li>
-							<PostCard post={post} headingLevel={3} />
-						</li>
-					))}
-				</ul>
-			)
-		}
-	</section>
+      <div class="grid gap-[var(--space-section)] lg:grid-cols-[minmax(0,4fr)_minmax(0,2fr)] lg:gap-12">
+        <section aria-labelledby="more-posts">
+          <h2 id="more-posts" class="section-title">Weitere Beiträge</h2>
+
+          {feed.length > 0 ? (
+            <div class="feed">
+              {feed.map((post) => <PostCard post={post} />)}
+            </div>
+          ) : (
+            <p class="text-muted-foreground">Weitere Beiträge folgen bald.</p>
+          )}
+
+          {hasMore && (
+            <a href="/posts/" class="btn btn-outline btn-block mt-16">Zum Archiv</a>
+          )}
+        </section>
+
+        <aside class="sidebar">
+          <section aria-labelledby="about-heading">
+            <h2 id="about-heading" class="section-title">Über diesen Blog</h2>
+            <p class="text-lg font-semibold tracking-tight">{siteConfig.name}</p>
+            <p class="mt-2 text-pretty text-sm leading-relaxed text-muted-foreground">{siteConfig.about}</p>
+            {siteConfig.newsletter.enabled && (
+              <div class="mt-7 border-t border-border pt-6">
+                <NewsletterSignup />
+              </div>
+            )}
+          </section>
+
+          {featured.length > 0 && (
+            <section aria-labelledby="featured-heading">
+              <h2 id="featured-heading" class="section-title">Empfohlen</h2>
+              <div class="grid gap-7">
+                {featured.map((post) => <PostCard post={post} variant="compact" headingLevel="h3" />)}
+              </div>
+            </section>
+          )}
+
+          {categoryList.length > 0 && (
+            <section aria-labelledby="categories-heading">
+              <h2 id="categories-heading" class="section-title">Kategorien</h2>
+              <ul class="grid gap-4">
+                {categoryList.map((category) => (
+                  <li>
+                    <a href={categoryHref(category.name)} class="link-title flex items-center justify-between gap-3">
+                      <span class="link-title__text text-base font-semibold tracking-tight">{category.name}</span>
+                      <span class="pill shrink-0">
+                        {category.count} {category.count === 1 ? "Beitrag" : "Beiträge"}
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          )}
+        </aside>
+      </div>
+    </div>
+  </main>
+  <SiteFooter />
 </BaseLayout>
-
-<style>
-	.hero {
-		padding: 4rem 1.5rem;
-		text-align: center;
-		background: #eaf2fb;
-		border-radius: 12px;
-	}
-
-	.hero h1 {
-		font-size: clamp(1.8rem, 5vw, 2.75rem);
-		line-height: 1.2;
-		color: #1a2b40;
-	}
-
-	.subtitle {
-		margin-top: 1rem;
-		font-size: 1.2rem;
-		color: #4a5a6a;
-	}
-
-	.button {
-		display: inline-block;
-		margin-top: 2rem;
-		padding: 0.75rem 1.75rem;
-		font-weight: 600;
-		color: #fff;
-		background: #0057b8;
-		border-radius: 6px;
-		text-decoration: none;
-		transition: background 0.2s;
-	}
-
-	.button:hover,
-	.button:focus-visible {
-		background: #00438f;
-	}
-
-	.button:focus-visible {
-		outline: 2px solid #0057b8;
-		outline-offset: 3px;
-	}
-
-	.section {
-		margin-top: 3rem;
-	}
-
-	.section h2 {
-		margin-bottom: 1rem;
-		font-size: 1.6rem;
-	}
-
-	.post-grid {
-		list-style: none;
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-		gap: 1.25rem;
-	}
-</style>
