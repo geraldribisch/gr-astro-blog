@@ -1,21 +1,15 @@
 ---
-import instagram from "@/icons/bootstrap/instagram.svg?raw";
-import link45deg from "@/icons/bootstrap/link-45deg.svg?raw";
+import envelope from "@/icons/bootstrap/envelope.svg?raw";
+import github from "@/icons/bootstrap/github.svg?raw";
 import linkedin from "@/icons/bootstrap/linkedin.svg?raw";
-import rss from "@/icons/bootstrap/rss.svg?raw";
-import tiktok from "@/icons/bootstrap/tiktok.svg?raw";
-import youtube from "@/icons/bootstrap/youtube.svg?raw";
 
 const icons = {
-  instagram,
-  "link-45deg": link45deg,
+  envelope,
+  github,
   linkedin,
-  rss,
-  tiktok,
-  youtube,
 };
 
-type LocalIconName = keyof typeof icons;
+export type LocalIconName = keyof typeof icons;
 
 interface Props {
   name: LocalIconName;

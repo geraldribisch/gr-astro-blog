@@ -1,86 +1,128 @@
 ---
 import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import LocalIcon from "@/components/LocalIcon.astro";
 import PostCard from "@/components/PostCard.astro";
 import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { siteConfig } from "@/config/site";
 import { ui } from "@/config/ui";
-import { categoryHref, getCategoryList, getFeatured, visiblePosts } from "@/lib/posts";
+import { getFeatured, visiblePosts } from "@/lib/posts";
+import portrait from "@/assets/profile.webp";
 
 const allPosts = visiblePosts(await getCollection("posts"));
-const [latest, ...rest] = allPosts;
-const feed = rest.slice(0, 8);
-const featured = getFeatured(allPosts, 4).filter((post) => post.id !== latest?.id);
-const categoryList = getCategoryList(allPosts);
-const hasMore = rest.length > feed.length;
+const [featured] = getFeatured(allPosts, 1);
+const latest = allPosts.filter((post) => post.id !== featured?.id).slice(0, 5);
+
+const person = {
+  "@type": "Person",
+  "@id": `${siteConfig.siteUrl}/#person`,
+  name: siteConfig.authorName,
+  jobTitle: siteConfig.jobTitle,
+  url: siteConfig.siteUrl,
+  sameAs: siteConfig.socials.filter((item) => item.sameAs).map((item) => item.href),
+};
+
+const structuredData = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: siteConfig.name,
+    url: siteConfig.siteUrl,
+    description: siteConfig.description,
+    inLanguage: siteConfig.language,
+    publisher: { "@id": person["@id"] },
+  },
+  { "@context": "https://schema.org", ...person },
+];
 ---
 
-<BaseLayout>
+<BaseLayout structuredData={structuredData}>
   <SiteHeader posts={allPosts} />
   <main id="content" class="outer">
-    <div class="inner">
-      <h1 class="sr-only">{siteConfig.name} — {siteConfig.tagline}</h1>
+    <div class="canvas">
+      <section
+        class="flex flex-col items-center gap-8 pt-12 pb-[var(--space-section)] text-center md:flex-row md:items-center md:gap-10 md:pt-16 md:text-left"
+        aria-labelledby="home-title"
+      >
+        <Image
+          src={portrait}
+          alt={ui.home.portraitAlt(siteConfig.authorName)}
+          width={176}
+          height={176}
+          densities={[1, 2]}
+          loading="eager"
+          fetchpriority="high"
+          class="portrait"
+        />
 
-      {latest && (
-        <section class="pt-10 pb-[var(--space-section)] md:pt-14" aria-label={ui.home.latestLabel}>
-          <PostCard post={latest} variant="lead" headingLevel="h2" dateLabel={ui.home.latestBadge} />
+        <div>
+          <h1 id="home-title" class="home-title">{siteConfig.authorName}</h1>
+          <p class="eyebrow mt-3">{siteConfig.jobTitle}</p>
+          <p class="mt-5 text-pretty text-lg leading-relaxed text-muted-foreground">{siteConfig.about}</p>
+
+          <ul class="mt-6 flex items-center justify-center gap-2.5 md:justify-start" aria-label={ui.home.socialNav}>
+            {
+              siteConfig.socials.map((item) => (
+                <li>
+                  <a
+                    href={item.href}
+                    class="social-btn"
+                    aria-label={ui.footer.socialLabel(siteConfig.authorName, item.label)}
+                    rel="me"
+                  >
+                    <LocalIcon name={item.icon} className="h-[0.95rem] w-[0.95rem]" />
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </section>
+
+      {featured && (
+        <section class="pb-[var(--space-section)]" aria-labelledby="featured-heading">
+          <h2 id="featured-heading" class="section-title">{ui.common.featured}</h2>
+          <PostCard post={featured} variant="lead" headingLevel="h3" />
         </section>
       )}
 
-      <div class="grid gap-[var(--space-section)] lg:grid-cols-[minmax(0,4fr)_minmax(0,2fr)] lg:gap-12">
-        <section aria-labelledby="more-posts">
-          <h2 id="more-posts" class="section-title">{ui.home.morePosts}</h2>
+      <section aria-labelledby="latest-heading">
+        <h2 id="latest-heading" class="section-title">{ui.home.latest}</h2>
 
-          {feed.length > 0 ? (
+        {latest.length > 0 ? (
+          <>
             <div class="feed">
-              {feed.map((post) => <PostCard post={post} />)}
+              {latest.map((post) => <PostCard post={post} headingLevel="h3" />)}
             </div>
-          ) : (
-            <p class="text-muted-foreground">{ui.home.noMorePosts}</p>
-          )}
-
-          {hasMore && (
-            <a href="/posts/" class="btn btn-outline btn-block mt-16">{ui.home.toArchive}</a>
-          )}
-        </section>
-
-        <aside class="sidebar">
-          <section aria-labelledby="about-heading">
-            <h2 id="about-heading" class="section-title">{ui.home.about}</h2>
-            <p class="text-lg font-semibold tracking-tight">{siteConfig.name}</p>
-            <p class="mt-2 text-pretty text-sm leading-relaxed text-muted-foreground">{siteConfig.about}</p>
-          </section>
-
-          {featured.length > 0 && (
-            <section aria-labelledby="featured-heading">
-              <h2 id="featured-heading" class="section-title">{ui.common.featured}</h2>
-              <div class="grid gap-7">
-                {featured.map((post) => <PostCard post={post} variant="compact" headingLevel="h3" />)}
-              </div>
-            </section>
-          )}
-
-          {categoryList.length > 0 && (
-            <section aria-labelledby="categories-heading">
-              <h2 id="categories-heading" class="section-title">{ui.common.categories}</h2>
-              <ul class="grid gap-4">
-                {categoryList.map((category) => (
-                  <li>
-                    <a href={categoryHref(category.name)} class="link-title flex items-center justify-between gap-3">
-                      <span class="link-title__text text-base font-semibold tracking-tight">{category.name}</span>
-                      <span class="pill shrink-0">
-                        {ui.common.postCount(category.count)}
-                      </span>
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          )}
-        </aside>
-      </div>
+            <a href="/posts/" class="btn btn-outline btn-block mt-16">{ui.home.allPosts}</a>
+          </>
+        ) : (
+          <p class="text-muted-foreground">{ui.home.noPosts}</p>
+        )}
+      </section>
     </div>
   </main>
   <SiteFooter />
 </BaseLayout>
+
+<style>
+  .portrait {
+    flex-shrink: 0;
+    width: 11rem;
+    height: 11rem;
+    object-fit: cover;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+  }
+
+  .home-title {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 6vw, 3.25rem);
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+  }
+</style>

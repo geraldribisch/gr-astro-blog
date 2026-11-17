@@ -5,9 +5,9 @@ import { formatDate, postHref, readingLabel, type Post } from "@/lib/posts";
 interface Props {
   post: Post;
   /**
-   * - `lead`: the large latest-post card at the top of the home page
+   * - `lead`: the large "Empfohlen" card on the home page
    * - `feed`: the standard entry in a post list
-   * - `compact`: the small entry used in sidebars and "keep reading"
+   * - `compact`: the small entry used for related posts
    */
   variant?: "lead" | "feed" | "compact";
   headingLevel?: "h2" | "h3";
