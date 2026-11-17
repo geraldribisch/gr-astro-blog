@@ -97,6 +97,8 @@
 </style>
 
 <script>
+  import { ui } from "@/config/ui";
+
   function activateTab(panels: HTMLElement[], tabs: HTMLButtonElement[], activeIndex: number) {
     panels.forEach((panel, index) => {
       panel.hidden = index !== activeIndex;
@@ -117,7 +119,7 @@
     if (panels.length < 2) return;
 
     const tabs: HTMLButtonElement[] = panels.map((panel, index) => {
-      const label = panel.getAttribute("data-code-tab-label") || `Variante ${index + 1}`;
+      const label = panel.getAttribute("data-code-tab-label") || ui.post.codeTabFallback(index + 1);
       const tabId = `${groupId}-tab-${index}`;
       const panelId = `${groupId}-panel-${index}`;
 

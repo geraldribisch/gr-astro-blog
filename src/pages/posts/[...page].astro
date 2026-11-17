@@ -6,6 +6,7 @@ import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { siteConfig } from "@/config/site";
+import { ui } from "@/config/ui";
 import { visiblePosts, type Post } from "@/lib/posts";
 
 export const getStaticPaths = (async ({ paginate }) => {
@@ -19,8 +20,8 @@ interface Props {
 
 const { page } = Astro.props;
 const allPosts = visiblePosts(await getCollection("posts"));
-const title = page.currentPage === 1 ? "Archiv" : `Archiv – Seite ${page.currentPage}`;
-const description = `Alle Beiträge auf ${siteConfig.name}.`;
+const title = ui.archive.title(page.currentPage);
+const description = ui.archive.description(siteConfig.name);
 const withTrailingSlash = (url: string | undefined) => (url && !url.endsWith("/") ? `${url}/` : url);
 const prevUrl = withTrailingSlash(page.url.prev);
 const nextUrl = withTrailingSlash(page.url.next);
@@ -31,10 +32,10 @@ const nextUrl = withTrailingSlash(page.url.next);
   <main id="content" class="outer">
     <div class="canvas">
       <header class="pagehead">
-        <p class="eyebrow">Archiv</p>
-        <h1 class="pagehead-title">Alle Beiträge</h1>
+        <p class="eyebrow">{ui.archive.eyebrow}</p>
+        <h1 class="pagehead-title">{ui.archive.heading}</h1>
         <p class="pagehead-description">
-          {page.total} {page.total === 1 ? "Beitrag" : "Beiträge"}, neueste zuerst. Seite {page.currentPage} von {page.lastPage}.
+          {ui.archive.summary(page.total, page.currentPage, page.lastPage)}
         </p>
       </header>
 
@@ -42,26 +43,26 @@ const nextUrl = withTrailingSlash(page.url.next);
         {page.data.map((post) => <PostCard post={post} />)}
       </div>
 
-      <nav class="mt-16 flex items-center justify-between gap-4 border-t border-border pt-6" aria-label="Seitennavigation Archiv">
+      <nav class="mt-16 flex items-center justify-between gap-4 border-t border-border pt-6" aria-label={ui.archive.pagination}>
         {
           prevUrl ? (
             <a href={prevUrl} class="nav-link link-nudge">
-              <span class="link-nudge__arrow link-nudge__arrow--prev">&larr;</span> Neuer
+              <span class="link-nudge__arrow link-nudge__arrow--prev">&larr;</span> {ui.archive.newer}
             </a>
           ) : (
-            <span class="nav-link opacity-40">&larr; Neuer</span>
+            <span class="nav-link opacity-40">&larr; {ui.archive.newer}</span>
           )
         }
         <span class="text-xs tracking-widest text-muted-foreground uppercase">
-          Seite {page.currentPage} / {page.lastPage}
+          {ui.archive.pageOf(page.currentPage, page.lastPage)}
         </span>
         {
           nextUrl ? (
             <a href={nextUrl} class="nav-link link-nudge">
-              Älter <span class="link-nudge__arrow link-nudge__arrow--next">&rarr;</span>
+              {ui.archive.older} <span class="link-nudge__arrow link-nudge__arrow--next">&rarr;</span>
             </a>
           ) : (
-            <span class="nav-link opacity-40">Älter &rarr;</span>
+            <span class="nav-link opacity-40">{ui.archive.older} &rarr;</span>
           )
         }
       </nav>

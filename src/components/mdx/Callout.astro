@@ -1,4 +1,6 @@
 ---
+import { ui } from "@/config/ui";
+
 interface Props {
   type?: "note" | "tip" | "warning" | "danger";
   title?: string;
@@ -6,12 +8,7 @@ interface Props {
 
 const { type = "note", title } = Astro.props;
 
-const defaultTitles: Record<NonNullable<Props["type"]>, string> = {
-  note: "Hinweis",
-  tip: "Tipp",
-  warning: "Warnung",
-  danger: "Wichtig",
-};
+const defaultTitles: Record<NonNullable<Props["type"]>, string> = ui.callout;
 
 const heading = title ?? defaultTitles[type];
 ---
