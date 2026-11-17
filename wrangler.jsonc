@@ -7,6 +7,5 @@
   },
   "workers_dev": false,
   "preview_urls": true,
-  // Pflicht für `npx wrangler preview` (ab Wrangler 4.164). Leer = gleiche Einstellungen wie Production.
   "previews": {}
 }

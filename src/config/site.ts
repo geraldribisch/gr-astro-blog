@@ -4,7 +4,7 @@ export const siteConfig = {
   tagline: "Gedanken und Notizen aus Wien",
   title: "Gerald Ribisch – Blog",
   description: "Persönlicher Blog von Gerald Ribisch mit Gedanken und Notizen aus Wien.",
-  siteUrl: "https://geraldribisch.com",
+  siteUrl: "https://www.geraldribisch.com",
   authorName: "Gerald Ribisch",
   email: "hi@geraldribisch.com",
   language: "de",
