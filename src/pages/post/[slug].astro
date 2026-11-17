@@ -9,6 +9,7 @@ import Callout from "@/components/mdx/Callout.astro";
 import CodeGroup from "@/components/mdx/CodeGroup.astro";
 import CodeGroupItem from "@/components/mdx/CodeGroupItem.astro";
 import { siteConfig } from "@/config/site";
+import { ui } from "@/config/ui";
 import {
   categoryHref,
   formatDate,
@@ -44,6 +45,13 @@ const articleUrl = new URL(postHref(post), siteConfig.siteUrl).toString();
 const socialImage = data.cover
   ? new URL(data.cover.src.src, siteConfig.siteUrl).toString()
   : new URL(siteConfig.socialImage, siteConfig.siteUrl).toString();
+const copyStrings = {
+  copy: ui.post.copy,
+  copied: ui.post.copied,
+  copiedAnnouncement: ui.post.copiedAnnouncement,
+  copyError: ui.post.copyError,
+  copyErrorAnnouncement: ui.post.copyErrorAnnouncement,
+};
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "Article",
@@ -71,7 +79,7 @@ const structuredData = {
       <header class="canvas pt-10 md:pt-14">
         <p class="meta post-meta">
           <span class="post-meta__byline">
-            Von {data.author.name} in{" "}
+            {ui.post.byline(data.author.name)}{" "}
             <a href={categoryHref(data.category)} class="link-sweep post-meta__link">{data.category}</a>
           </span>
           <span class="post-meta__dates">
@@ -85,7 +93,7 @@ const structuredData = {
 
         {data.updatedDate && (
           <p class="meta mt-5">
-            <span>Aktualisiert am <time datetime={data.updatedDate.toISOString()}>{formatDate(data.updatedDate)}</time></span>
+            <span>{ui.post.updated} <time datetime={data.updatedDate.toISOString()}>{formatDate(data.updatedDate)}</time></span>
           </p>
         )}
 
@@ -122,12 +130,12 @@ const structuredData = {
 
       {(newer || older) && (
         <footer class="canvas mt-16 border-t border-border pt-8">
-          <nav class="grid gap-8 sm:grid-cols-2" aria-label="Beitragsnavigation">
+          <nav class="grid gap-8 sm:grid-cols-2" aria-label={ui.post.postNav}>
             <div>
               {older && (
                 <a href={postHref(older)} class="link-title link-nudge">
                   <span class="eyebrow">
-                    <span class="link-nudge__arrow link-nudge__arrow--prev">&larr;</span> Vorheriger
+                    <span class="link-nudge__arrow link-nudge__arrow--prev">&larr;</span> {ui.post.previous}
                   </span>
                   <span class="link-title__text mt-2 block font-semibold leading-snug">{older.data.title}</span>
                 </a>
@@ -137,7 +145,7 @@ const structuredData = {
               {newer && (
                 <a href={postHref(newer)} class="link-title link-nudge">
                   <span class="eyebrow">
-                    Nächster <span class="link-nudge__arrow link-nudge__arrow--next">&rarr;</span>
+                    {ui.post.next} <span class="link-nudge__arrow link-nudge__arrow--next">&rarr;</span>
                   </span>
                   <span class="link-title__text mt-2 block font-semibold leading-snug">{newer.data.title}</span>
                 </a>
@@ -150,7 +158,7 @@ const structuredData = {
 
     {related.length > 0 && (
       <section class="canvas mt-[var(--space-section)]" aria-labelledby="keep-reading">
-        <h2 id="keep-reading" class="section-title">Weiterlesen</h2>
+        <h2 id="keep-reading" class="section-title">{ui.post.related}</h2>
         <div class="grid gap-7">
           {related.map((item) => <PostCard post={item} variant="compact" headingLevel="h3" />)}
         </div>
@@ -159,9 +167,12 @@ const structuredData = {
   </main>
   <SiteFooter />
 
+  <script is:inline type="application/json" id="code-copy-strings" set:html={JSON.stringify(copyStrings)} />
   <script is:inline>
     /* Progressive enhancement: every code block in the article body gets a copy
        button, added client-side so the rendered HTML stays plain. */
+    const t = JSON.parse(document.getElementById("code-copy-strings")?.textContent || "{}");
+
     document.querySelectorAll(".prose pre").forEach((pre, index) => {
       if (pre.closest(".code-copy-frame")) return;
 
@@ -175,7 +186,7 @@ const structuredData = {
       button.type = "button";
       button.className = "code-copy-button";
       button.setAttribute("aria-describedby", labelId);
-      button.textContent = "Kopieren";
+      button.textContent = t.copy;
       liveRegion.id = labelId;
       liveRegion.className = "sr-only";
       liveRegion.setAttribute("aria-live", "polite");
@@ -187,14 +198,14 @@ const structuredData = {
         try {
           if (!navigator.clipboard?.writeText) throw new Error("Clipboard API unavailable");
           await navigator.clipboard.writeText(code?.textContent ?? pre.textContent ?? "");
-          button.textContent = "Kopiert";
-          liveRegion.textContent = "Code kopiert";
+          button.textContent = t.copied;
+          liveRegion.textContent = t.copiedAnnouncement;
         } catch {
-          button.textContent = "Fehler";
-          liveRegion.textContent = "Kopieren fehlgeschlagen";
+          button.textContent = t.copyError;
+          liveRegion.textContent = t.copyErrorAnnouncement;
         }
         window.setTimeout(() => {
-          button.textContent = "Kopieren";
+          button.textContent = t.copy;
         }, 1800);
       });
     });

@@ -3,23 +3,24 @@ import { getCollection } from "astro:content";
 import SiteFooter from "@/components/SiteFooter.astro";
 import SiteHeader from "@/components/SiteHeader.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { ui } from "@/config/ui";
 import { visiblePosts } from "@/lib/posts";
 
 const allPosts = visiblePosts(await getCollection("posts"));
 ---
 
-<BaseLayout title="Seite nicht gefunden" description="Die angeforderte Seite wurde nicht gefunden." noindex>
+<BaseLayout title={ui.notFound.title} description={ui.notFound.description} noindex>
   <SiteHeader posts={allPosts} />
   <main id="content" class="outer grid min-h-[55vh] place-items-center py-16 text-center">
     <div>
-      <p class="eyebrow">Fehler 404</p>
-      <h1 class="pagehead-title">Seite nicht gefunden</h1>
+      <p class="eyebrow">{ui.notFound.eyebrow}</p>
+      <h1 class="pagehead-title">{ui.notFound.heading}</h1>
       <p class="pagehead-description mx-auto">
-        Der Beitrag wurde vielleicht verschoben, oder die Adresse ist falsch geschrieben.
+        {ui.notFound.text}
       </p>
       <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
-        <a href="/" class="btn btn-solid">Zur Startseite</a>
-        <a href="/posts/" class="btn btn-outline">Zum Archiv</a>
+        <a href="/" class="btn btn-solid">{ui.notFound.toHome}</a>
+        <a href="/posts/" class="btn btn-outline">{ui.notFound.toArchive}</a>
       </div>
     </div>
   </main>

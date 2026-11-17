@@ -1,6 +1,7 @@
 import type { CollectionEntry } from "astro:content";
 import { categories, categorySlug, type Category } from "@/config/categories";
 import { siteConfig } from "@/config/site";
+import { ui } from "@/config/ui";
 
 export type Post = CollectionEntry<"posts">;
 export { categories, categorySlug, type Category };
@@ -25,7 +26,7 @@ export const readingMinutes = (post: Post) => {
   return Math.max(1, Math.round(words / 220));
 };
 
-export const readingLabel = (post: Post) => `${readingMinutes(post)} Min. Lesezeit`;
+export const readingLabel = (post: Post) => ui.common.readingTime(readingMinutes(post));
 
 export const getFeatured = (posts: Post[], limit = 5) =>
   visiblePosts(posts)
@@ -70,7 +71,8 @@ export const getAdjacent = (posts: Post[], current: Post) => {
   };
 };
 
-export const formatDate = (date: Date, style: "short" | "long" = "short") =>
+/** Österreichisches Datumsformat, z. B. "16. November 2026". */
+export const formatDate = (date: Date, style: "short" | "long" = "long") =>
   new Intl.DateTimeFormat(siteConfig.dateLocale, {
     month: style === "short" ? "short" : "long",
     day: "numeric",

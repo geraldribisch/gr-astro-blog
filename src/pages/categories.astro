@@ -5,6 +5,7 @@ import SiteHeader from "@/components/SiteHeader.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { categoryDescriptions } from "@/config/categories";
 import { siteConfig } from "@/config/site";
+import { ui } from "@/config/ui";
 import { categoryHref, getCategoryList, visiblePosts } from "@/lib/posts";
 
 const allPosts = visiblePosts(await getCollection("posts"));
@@ -12,18 +13,17 @@ const categoryList = getCategoryList(allPosts);
 ---
 
 <BaseLayout
-  title="Kategorien"
-  description={`Alle Kategorien auf ${siteConfig.name} mit Anzahl der Beiträge.`}
+  title={ui.categoriesPage.title}
+  description={ui.categoriesPage.description(siteConfig.name)}
 >
   <SiteHeader posts={allPosts} />
   <main id="content" class="outer">
     <div class="canvas">
       <header class="pagehead">
-        <p class="eyebrow">Übersicht</p>
-        <h1 class="pagehead-title">Kategorien</h1>
+        <p class="eyebrow">{ui.categoriesPage.eyebrow}</p>
+        <h1 class="pagehead-title">{ui.categoriesPage.heading}</h1>
         <p class="pagehead-description">
-          {allPosts.length} {allPosts.length === 1 ? "Beitrag" : "Beiträge"} in {categoryList.length}{" "}
-          {categoryList.length === 1 ? "Kategorie" : "Kategorien"}.
+          {ui.categoriesPage.summary(allPosts.length, categoryList.length)}
         </p>
       </header>
 
@@ -35,7 +35,7 @@ const categoryList = getCategoryList(allPosts);
                 <span class="flex items-baseline justify-between gap-4">
                   <span class="link-title__text text-xl font-semibold tracking-tight">{category.name}</span>
                   <span class="pill shrink-0">
-                    {category.count} {category.count === 1 ? "Beitrag" : "Beiträge"}
+                    {ui.common.postCount(category.count)}
                   </span>
                 </span>
                 <span class="mt-2 block max-w-2xl text-pretty text-sm leading-relaxed text-muted-foreground">
